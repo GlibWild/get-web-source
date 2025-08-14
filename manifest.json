@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "资源助手",
+  "version": "1.0",
+  "description": "获取网页资源，便于下载、复制。",
+  "permissions": ["scripting", "activeTab"],
+  "action": {
+    "default_popup": "/html/result.html",
+    "default_icon": {
+      "16": "/img/lan.png",
+      "48": "/img/lan.png",
+      "128": "/img/lan.png"
+    }
+  },
+  "icons": {
+    "16": "/img/lan.png",
+    "48": "/img/lan.png",
+    "128": "/img/lan.png"
+  },
+  "background": {
+    "service_worker": "/js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["/js/content.js"]
+    }
+  ]
+}

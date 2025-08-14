@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+  padding: 4px;
+  width:340px;
+}
+
+img {
+  margin: 5px;
+  border: 1px solid #ccc;
+}
+
+.color-box {
+  width: 100%;
+  height: 30px;
+  color: #fff;
+  margin: 5px;
+  text-align: center;
+  line-height: 30px;
+}

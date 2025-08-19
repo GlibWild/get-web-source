@@ -25,5 +25,11 @@
       "matches": ["<all_urls>"],
       "js": ["/js/content.js"]
     }
+  ],
+   "web_accessible_resources": [
+    {
+      "resources": ["/js/content.js"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }

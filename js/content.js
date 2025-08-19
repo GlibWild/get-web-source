@@ -27,8 +27,11 @@ function getAllColor() {
     }
 
     const bgImage = getComputedStyle(el).background;
-    console.log(bgImage);
-    if (bgImage && bgImage !== "none") {
+    if (bgImage && bgImage !== "none" && !(bgImage.includes("rgba(0, 0, 0, 0)") && !bgImage.includes("url")) 
+     && !(bgImage.includes("rgb(255, 255, 255) none") && !bgImage.includes("url"))
+    ) {
+      var height = getComputedStyle(el).height;
+      var width = getComputedStyle(el).width;
       //   const gradientColors = bgColor.match(
       //     /rgba?\((\d+), (\d+), (\d+)(?:, (\d+))?\)/g
       //   );
@@ -40,8 +43,13 @@ function getAllColor() {
       //   }
       // }
       // if(bgImage && bgImage.startsWith("linear-gradient")) {
-      console.log(bgImage);
-      backgrounds.push(bgImage);
+
+      var bgStyle = {
+        bgImage: bgImage,
+        width: width,
+        height: height,
+      };
+      backgrounds.push(bgStyle);
     }
 
     if (
@@ -52,7 +60,6 @@ function getAllColor() {
       fontColors.push(fontColor);
     }
   });
-  console.log(backgrounds);
   return {
     bgColors: [...new Set(bgColors)],
     fontColors: [...new Set(fontColors)],
@@ -91,7 +98,6 @@ function getDominantColor(imageUrl) {
       b = Math.round(b / count);
 
       if (r >= 0 && g >= 0 && b >= 0) {
-        // console.log(`rgb(${r}, ${g}, ${b})`);
         resolve({ rgb: `rgb(${r}, ${g}, ${b})`, hex: rgbToHex(r, g, b) });
       } else {
         resolve({ rgb: "rgb(0, 0, 0)", hex: "error" }); // 如果加载失败，返回黑色

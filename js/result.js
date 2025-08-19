@@ -14,45 +14,113 @@ chrome.runtime.onMessage.addListener((request) => {
     imgContainer.appendChild(img);
 
     if (colors[i].hex != "error") {
+      const container = document.createElement("div");
+      container.className = "container";
+
       const colorBox = document.createElement("div");
       colorBox.textContent = colors[i].rgb + "-" + colors[i].hex;
       colorBox.style.color = getFontColor(colors[i].rgb);
       colorBox.style.background = colors[i].rgb;
       colorBox.className = "color-box";
-      colorContainer.appendChild(colorBox);
+      container.appendChild(colorBox);
+
+      const copyButton = document.createElement("button");
+      copyButton.textContent = "复制";
+      copyButton.style.marginLeft = "10px";
+      copyButton.style.cursor = "pointer";
+      copyButton.style.height = "30px";
+      copyButton.addEventListener("click", () => {
+        copyText(color + "");
+      });
+      container.appendChild(copyButton);
+
+      colorContainer.appendChild(container);
     }
   });
   bgColors.forEach((color) => {
+    const container = document.createElement("div");
+    container.className = "container";
+
     const bgColorBox = document.createElement("div");
     bgColorBox.textContent = color + "";
     bgColorBox.style.color = getFontColor(color);
     bgColorBox.style.background = color;
     bgColorBox.className = "color-box";
-    bgColorContainer.appendChild(bgColorBox);
+    container.appendChild(bgColorBox);
+
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "复制";
+    copyButton.style.marginLeft = "10px";
+    copyButton.style.cursor = "pointer";
+    copyButton.style.height = "30px";
+    copyButton.addEventListener("click", () => {
+      copyText(color + "");
+    });
+    container.appendChild(copyButton);
+
+    bgColorContainer.appendChild(container);
   });
 
   fontColors.forEach((color) => {
+    const container = document.createElement("div");
+    container.className = "container";
+
     const fontColorBox = document.createElement("div");
     fontColorBox.textContent = color + "";
     fontColorBox.style.color = getFontColor(color);
     fontColorBox.style.background = color;
     fontColorBox.className = "color-box";
-    fontColorContainer.appendChild(fontColorBox);
+    container.appendChild(fontColorBox);
+
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "复制";
+    copyButton.style.marginLeft = "10px";
+    copyButton.style.cursor = "pointer";
+    copyButton.style.height = "30px";
+    copyButton.addEventListener("click", () => {
+      copyText(color + "");
+    });
+    container.appendChild(copyButton);
+
+    fontColorContainer.appendChild(container);
   });
 
   backgrounds.forEach((bg, i) => {
+    const container = document.createElement("div");
+    container.className = "background-container";
+
+    const imgBox = document.createElement("div");
+    imgBox.style.flex = "1";
+
     const img = document.createElement("div");
-    img.style.background = bg;
-    img.style.display = "inline-flex";
-    img.style.textWrap = "nowrap";
+    img.style.background = bg.bgImage;
+    // img.style.display = "inline-flex";
+    // img.style.textWrap = "nowrap";
     // img.width = 100;
-    img.style.width = "100%";
-    img.style.height = "50px";
-    img.style.lineHeight = "50px";
-    img.style.textAlign = "center";
-    img.textContent = bg;
-    img.style.color = getFontColor(bg);
-    backgroundContainer.appendChild(img);
+    // img.style.flex = "1";
+    // img.style.minHeight = "50px";
+    img.style.height = bg.height;
+    img.style.width = bg.width;
+    img.style.maxWidth = "277px";
+    img.style.maxHeight = "120px";
+    // img.style.lineHeight = "50px";
+    // img.style.textAlign = "center";
+    // img.textContent = bg;
+    img.style.color = getFontColor(bg.bgImage);
+    imgBox.appendChild(img);
+    container.appendChild(imgBox);
+
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "复制";
+    copyButton.style.marginLeft = "10px";
+    copyButton.style.cursor = "pointer";
+    copyButton.style.height = "30px";
+    copyButton.addEventListener("click", () => {
+      copyText(bg.bgImage + "");
+    });
+    container.appendChild(copyButton);
+
+    backgroundContainer.appendChild(container);
     const divider = document.createElement("div");
     divider.style.height = "1px";
     divider.style.background = "#ccc";
@@ -61,6 +129,17 @@ chrome.runtime.onMessage.addListener((request) => {
     backgroundContainer.appendChild(divider);
   });
 });
+
+function copyText(text) {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      console.log("✅ 写入成功");
+    })
+    .catch((err) => {
+      console.error("❌ 写入失败：", err);
+    });
+}
 
 function extractRGBValues(input) {
   const regex =
@@ -99,6 +178,21 @@ function getFontColor(bgColor) {
 
 const runScript = () => {
   chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+    const tab = tabs[0];
+    const url = tab.url;
+
+    if (
+      /^(chrome|edge):\/\//.test(url) ||
+      /chrome\.google\.com\/webstore/.test(url)
+    ) {
+      console.warn("无法注入脚本到受保护页面：" + url);
+      return;
+    }
+    await chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      files: ["/js/content.js"],
+    });
+
     chrome.tabs.sendMessage(tabs[0].id, { action: "run" }, function (response) {
       //   console.log("来自 content.js 的响应:", response);
     });

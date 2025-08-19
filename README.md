@@ -1,3 +1,6 @@
+📄 [隐私政策（中文版）](https://glibwild.github.io/get-web-source/privacy-policy-zh.html)
+📄 [privacy policy（English）](https://glibwild.github.io/get-web-source/privacy-policy-en.html)
+
 ### 资源助手
 #### 申明
 ##### 本功能为chrome插件，安装插件后可获取网页资源，便于下载、复制。

@@ -31,5 +31,6 @@
       "resources": ["/js/content.js"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "privacy_policy": "https://glibwild.github.io/get-web-source/privacy-policy-zh.html"
 }
